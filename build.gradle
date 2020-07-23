@@ -4,8 +4,8 @@ plugins {
 
 import fi.linuxbox.gradle.download.Download
 
-final downloadAll = tasks.register('downloadAll') {
-    group 'My tasks'
+final allDownloads = tasks.register('downloadChangeLogs') {
+    group 'Slackware ChangeLog Aggregate'
     description 'Download all ChangeLogs'
 }
 
@@ -17,10 +17,7 @@ ext {
 
 distroNames.each { final distroName ->
     distroVersions.each { final distroVersion ->
-        final distro = "$distroName-$distroVersion"
-        final path = "$distroName/$distroVersion"
-
-        final download = tasks.register("download-$distroName-$distroVersion-changelog", Download) {
+        final singleDownload = tasks.register("download-$distroName-$distroVersion-changelog", Download) {
 	    group 'Slackware ChangeLog'
 	    description "Download $distroName $distroVersion ChangeLog"
 	    
@@ -28,8 +25,8 @@ distroNames.each { final distroName ->
             to "$projectDir/changelogs/$distroName-${distroVersion}.txt"
         }
 
-        downloadAll.configure {
-            dependsOn download
+        allDownloads.configure {
+            dependsOn singleDownload
         }
     }
 }

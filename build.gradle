@@ -1,0 +1,35 @@
+plugins {
+  id 'fi.linuxbox.download' version '0.6'
+}
+
+import fi.linuxbox.gradle.download.Download
+
+final downloadAll = tasks.register('downloadAll') {
+    group 'My tasks'
+    description 'Download all ChangeLogs'
+}
+
+ext {
+    mirror = 'http://ftp.osuosl.org/pub/slackware'
+    distroNames = ['slackware', 'slackware64']
+    distroVersions = ['13.0', '13.1', '13.37', '14.0', '14.1', '14.2']
+}
+
+distroNames.each { final distroName ->
+    distroVersions.each { final distroVersion ->
+        final distro = "$distroName-$distroVersion"
+        final path = "$distroName/$distroVersion"
+
+        final download = tasks.register("download-$distroName-$distroVersion-changelog", Download) {
+	    group 'Slackware ChangeLog'
+	    description "Download $distroName $distroVersion ChangeLog"
+	    
+            from "$mirror/$distroName-$distroVersion/ChangeLog.txt"
+            to "$projectDir/changelogs/$distroName-${distroVersion}.txt"
+        }
+
+        downloadAll.configure {
+            dependsOn download
+        }
+    }
+}

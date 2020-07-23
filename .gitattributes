@@ -1,0 +1,4 @@
+# .bat files are Windows files; don't convert line endings
+*.bat -text
+# Don't change the ChangeLog.txt files in any way.
+*.txt -text

@@ -1,0 +1,23 @@
+language: java
+
+# https://docs.travis-ci.com/user/languages/java/#gradle-dependency-management
+install: skip
+
+# https://docs.travis-ci.com/user/languages/java/#gradle-default-script-command
+script:
+  - ls -l changelogs
+  - ./gradlew downloadChangeLogs
+  - git status
+  - git branch -a
+  - git remote -v
+  - true && echo "TRUE"
+  - false || echo "FALSE"
+
+# https://docs.travis-ci.com/user/languages/java/#caching
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
